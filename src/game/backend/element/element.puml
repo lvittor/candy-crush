@@ -1,0 +1,79 @@
+@startuml
+
+Element <|-- Bomb
+Element <|-- Candy
+Element <|-- Wall
+Candy *--L CandyColor
+Candy <|-- HorizontalStripedCandy
+Candy <|-- VerticalStripedCandy
+Candy <|-- WrappedCandy
+
+abstract class Element{
+  + boolean isMovable()
+  + {abstract} String getKey()
+  + String getFullKey()
+  + boolean isSolid()
+  + Direction[] explode()
+  + long getScore()
+}
+
+class Bomb{
+  + boolean isMovable()
+  + String getKey()
+  + long getScore()
+}
+
+class Candy {
+  - CandyColor color
+  + Candy()
+  + Candy(CandyColor color)
+  + CandyColor getColor()
+  + void setColor()
+  + boolean isMovable()
+  + int hashCode()
+  + boolean equals(Object obj)
+  + String getFullKey()
+  + String getKey()
+  + long getScore()
+}
+
+enum CandyColor{
+  RED
+  GREEN
+  BLUE
+  YELLOW
+  ORANGE
+  PURPLE
+}
+
+class HorizontalStripedCandy{
+  + HorizontalStripedCandy()
+  + String getKey()
+  + String getFullKey()
+  + Direction[] explode()
+  + long getScore()
+}
+
+class VerticalStripedCandy{
+  + VerticalStripedCandy()
+  + String getKey()
+  + String getFullKey()
+  + Direction[] explode()
+  + long getScore()
+}
+
+class WrappedCandy{
+  + WrappedCandy()
+  + String getKey()
+  + String getFullKey()
+  + Direction[] explode()
+  + long getScore()
+}
+
+class Wall{
+  + boolean isMovable()
+  + String getKey()
+}
+
+
+@enduml
