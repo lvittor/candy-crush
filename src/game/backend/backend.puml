@@ -1,0 +1,361 @@
+@startuml
+/' Para que las lineas doblen de forma recta '/
+skinparam linetype ortho
+
+package backend{
+    /' Revisado '/
+    class CandyGame implements GameListener
+
+    /' CandyGame '/
+    CandyGame *--L Grid
+    CandyGame *--R GameState
+
+    /' Grid '/
+    Grid *-- FigureDetector
+    Grid *-- GameState
+    Grid *--* GameListener
+
+    class CandyGame{
+      - Class<?> levelClass
+      - Grid grid
+      - GameState state
+      + CandyGame(Class<?> clazz)
+      + void initGame()
+      + int getSize()
+      + boolean tryMove(int i1, int j1, int i2, int j2)
+      + Cell get(int i, int j)
+      + void addGameListener(GameListener listener)
+      + long getScore()
+      + boolean isFinished()
+      + boolean playerWon()
+      + void cellExplosion(Element e)
+      + void gridUpdated()
+    }
+
+    interface GameListener{
+      + void gridUpdated()
+      + void cellExplosion(Element e)
+    }
+
+    enum Checkpoint {
+      U(-1,0, 1)
+      UU(-2,0, 2)
+      D(1,0, 4)
+      DD(2,0, 8)
+      R(0,1, 16)
+      RR(0,2, 32)
+      L(0,-1, 64)
+      LL(0,-2, 128)
+      - int i
+      - int j
+      - int value
+      + Checkpoint(int i, int j, int value)
+      + int getI()
+      + int getJ()
+      + int getValue()
+    }
+
+    enum Figure{
+      F1 ... F20
+      - Point[] points
+      - int value
+      - Class<?> replacementClass
+      - boolean isCandyRepl
+      ~ Figure(Point[] points, int value, Class<?> replacementClass)
+      ~ Figure(Point[] points, int value, Class<?> replacementClass, boolean isCandyRepl)
+      ~ Figure(Point[] points, int value)
+      + Point[] getPoints()
+      + int size()
+      + boolean hasReplacement()
+      + boolean matches(int acum)
+      + Element generateReplacement(CandyColor color)
+    }
+
+    /' Para dejar a Checkpoint abajo de FigureDetector '/
+    FigureDetector -[hidden]- Checkpoint
+
+    class FigureDetector{
+     - Grid grid
+     + FigureDetector(Grid grid)
+     + Figure checkFigure(int i, int j)
+     - int readCheckpoints(int i, int j)
+     + void removeFigure(int i, int j, Figure f)
+    }
+
+    abstract class GameState {
+     - long score
+     - int moves
+     + void addScore(long value)
+     + long getScore()
+     + void addMove()
+     + int getMoves()
+     + {abstract} boolean gameOver()
+     + {abstract} boolean playerWon()
+    }
+
+    abstract class Grid {
+     + {static} final int SIZE = 9
+     - Cell[SIZE][SIZE] g
+     - Map<Cell, Point> gMap
+     - GameState state
+     - List<GameListener> listeners
+     - MoveMaker moveMaker
+     - FigureDetector figureDetector
+     # {abstract} GameState newState()
+     # {abstract} void fillCells()
+     # Cell[][] g()
+     # GameState state()
+     + void initialize()
+     + Element get(int i, int j)
+     + Cell getCell(int i, int j)
+     + void fallElements()
+     + void clearContent(int i, int j)
+     + void setContent(int i, int j, Element e)
+     + boolean tryMove(int i1, int j1, int i2, int j2)
+     + Figure tryRemove(Cell cell)
+     - void removeFigure(int i, int j, Figure f)
+     + void swapContent(int i1, int j1, int i2, int j2)
+     + GameState createState()
+     + void addListener(GameListener listener)
+     + void wasUpdated()
+     + void cellExplosion(Element e)
+    }
+
+    /' Revisado '/
+    package "cell" {
+      Cell <|-- CandyGeneratorCell
+      Cell "1" *-- "many" Grid
+      Cell "many" *-- "1" Cell
+
+      class Cell{
+       - Grid grid
+       - Cell[] around
+       - Element content
+       + Cell(Grid grid)
+       + void setAround(Cell up, Cell down, Cell left, Cell right)
+       + boolean hasFloor()
+       + boolean isMovable()
+       + boolean isEmpty()
+       + Element getContent()
+       + void clearContent()
+       - void expandExplosion(Direction[] explosion)
+       - void explode(Direction d)
+       + Element getAndClearContent()
+       + boolean fallUpperContent()
+       + void setContent(Element content)
+      }
+
+      class CandyGeneratorCell{
+       + CandyGeneratorCell(Grid grid)
+       + boolean isMovable()
+       + boolean isEmpty()
+       + Element getContent()
+       + Element getAndClearContent()
+       + boolean fallUpperContent()
+       + void setContent(Element content)
+       + boolean equals(Object obj)
+      }
+
+    }
+
+    /' Revisado '/
+    package "element"{
+
+        /' Element '/
+        Element <|--L Bomb
+        Element <|-- Candy
+        Element <|--R Wall
+        Element <|-- Nothing
+        Cell *-- Element
+
+        /' Candy '/
+        Candy *--L CandyColor
+        Candy <|-- HorizontalStripedCandy
+        Candy <|-- VerticalStripedCandy
+        Candy <|-- WrappedCandy
+
+        /' Direction '/
+        HorizontalStripedCandy *-- Direction
+        VerticalStripedCandy *-- Direction
+        WrappedCandy *-- Direction
+
+        abstract class Element{
+          + {abstract} boolean isMovable()
+          + {abstract} String getKey()
+          + String getFullKey()
+          + boolean isSolid()
+          + Direction[] explode()
+          + long getScore()
+        }
+
+        class Bomb{
+          + boolean isMovable()
+          + String getKey()
+          + long getScore()
+        }
+
+        class Candy {
+          - CandyColor color
+          + Candy()
+          + Candy(CandyColor color)
+          + CandyColor getColor()
+          + void setColor(CandyColor color)
+          + boolean isMovable()
+          + int hashCode()
+          + boolean equals(Object obj)
+          + String getFullKey()
+          + String getKey()
+          + long getScore()
+        }
+
+        enum CandyColor{
+          RED
+          GREEN
+          BLUE
+          YELLOW
+          ORANGE
+          PURPLE
+        }
+
+        class HorizontalStripedCandy{
+          - Direction[2] explosion
+          + HorizontalStripedCandy()
+          + String getKey()
+          + String getFullKey()
+          + Direction[] explode()
+          + long getScore()
+        }
+
+        class Nothing{
+          + boolean isMovable()
+          + boolean isSolid()
+          + String getKey()
+        }
+
+        class VerticalStripedCandy{
+          - Direction[2] explosion
+          + VerticalStripedCandy()
+          + String getKey()
+          + String getFullKey()
+          + Direction[] explode()
+          + long getScore()
+        }
+
+        class WrappedCandy{
+          - Direction[4] explosion
+          + WrappedCandy()
+          + String getKey()
+          + String getFullKey()
+          + Direction[] explode()
+          + long getScore()
+        }
+
+        class Wall{
+          + boolean isMovable()
+          + String getKey()
+        }
+    }
+
+    /' Revisado '/
+    package "move" {
+        /' Move '/
+        Move <|--R BombMove
+        Move <|--R CandyMove
+
+        Move <|-- BombStrippedMove
+        Move <|-- BombWrappedMove
+        Move <|-- WrappedStripedMove
+
+        Move <|--up TwoBombMove
+        Move <|--up TwoStripedMove
+        Move <|--up TwoWrappedMove
+
+        Move *-- Grid
+
+        /' Move Maker '/
+        Grid "1" *-- "1" MoveMaker
+        MoveMaker *-- Move
+
+        /' Candy Move '/
+        CandyMove *--down Figure
+        CandyMove *-- Grid
+        CandyMove *-- FigureDetector
+
+        abstract class Move{
+         - Grid grid
+         ~ int i1, j1, i2, j2
+         + Move(Gride grid)
+         + void setCoords(int i1, int j1, int i2, int j2)
+         + boolean isValid()
+         # boolean internalValidation()
+         # Element get(int i, int j)
+         # void clearContent(int i, int j)
+         # void setContent(int i, int j, Element e)
+         # void wasUpdated()
+         + {abstract} void removeElements()
+        }
+
+        class BombMove{
+         + BombMove(Grid grid)
+         + void removeElements()
+        }
+
+        class BombStrippedMove{
+         + BombStrippedMove(Gride grid)
+         + void removeElements()
+         - Candy createStriped(CandyColor color)
+        }
+
+        class BombWrappedMove{
+         + BombWrappedMove(Grid grid)
+         + void removeElements()
+        }
+
+        class CandyMove{
+         - Figure f1
+         - Figure f2
+         - FigureDetector detector
+         - Grid grid
+         + CandyMove(Grid grid)
+         + boolean internalValidation()
+         + void removeElements()
+        }
+
+        enum Direction{
+          UP
+          DOWN
+          LEFT
+          RIGHT
+        }
+
+        class MoveMaker{
+         - Map<String, Move> map
+         - Grid grid
+         + MoveMaker(Grid grid)
+         - void initMap()
+         + Move getMove(int i1, int j1, int i2, int j2)
+        }
+
+        class WrappedStripedMove{
+         + WrappedStripedMove(Grid grid)
+         + void removeElements()
+        }
+
+        class TwoBombMove{
+         + TwoBombMove(Grid grid)
+         + void removeElements()
+        }
+
+        class TwoStripedMove{
+         + TwoStripedMove(Grid grid)
+         + void removeElements()
+        }
+
+        class TwoWrappedMove{
+         + TwoWrappedMove(Grid grid)
+         + void removeElements()
+        }
+
+    }
+}
+@enduml
