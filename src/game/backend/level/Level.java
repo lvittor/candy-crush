@@ -9,6 +9,7 @@ public abstract class Level extends Grid {
 
     private Cell wallCell;
     private Cell candyGenCell;
+    protected static final int MAX_MOVES = 20;
 
     @Override
     protected void fillCells() {
