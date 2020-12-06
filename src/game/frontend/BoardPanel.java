@@ -35,6 +35,7 @@ public class BoardPanel extends TilePane {
 		spotLight.setColor(Color.YELLOW);
 		spotLight.setElevation(100);
 		Lighting lighting = new Lighting(spotLight);
+
 		cells[row][column].setEffect(lighting);
 
 	}

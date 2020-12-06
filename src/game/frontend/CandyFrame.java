@@ -35,13 +35,25 @@ public class CandyFrame extends VBox {
 	}
 
 	public void CandyLevel(Level level) {
+
+		// idem para cada lvl.
+
 		getChildren().add(new AppMenu());
 		images = new ImageManager();
 		boardPanel = new BoardPanel(game.getSize(), game.getSize(), CELL_SIZE);
 		getChildren().add(boardPanel);
+
+		// diff
+
 		scorePanel = new ScorePanel();
 		getChildren().add(scorePanel);
+
+		// Idem para cda lvl.
+
 		game.initGame(level);
+
+		// Idem para level 1 y 2 supon que es idem para lvl 5.
+
 		GameListener listener;
 		game.addGameListener(listener = new GameListener() {
 			@Override
@@ -75,7 +87,16 @@ public class CandyFrame extends VBox {
 				Point2D newPoint = translateCoords(event.getX(), event.getY());
 				if (newPoint != null) {
 					System.out.println("Get second = " +  newPoint);
-					boolean couldMove = game().tryMove((int)lastPoint.getX(), (int)lastPoint.getY(), (int)newPoint.getX(), (int)newPoint.getY());
+					boolean valid = game().tryMove((int)lastPoint.getX(), (int)lastPoint.getY(), (int)newPoint.getX(), (int)newPoint.getY());
+
+					if (valid){
+						if( (int)lastPoint.getX() == (int)newPoint.getX() ){
+
+						} else {
+
+						}
+					}
+
 					String message = ((Long)game().getScore()).toString();
 					if (game().isFinished()) {
 						if (game().playerWon()) {
