@@ -5,6 +5,8 @@ import game.backend.GameListener;
 import game.backend.cell.Cell;
 import game.backend.element.Element;
 
+import game.backend.level.Level;
+import game.backend.level.Level1;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
@@ -23,15 +25,23 @@ public class CandyFrame extends VBox {
 	private Point2D lastPoint;
 	private CandyGame game;
 
-	public CandyFrame(CandyGame game) {
+	public CandyFrame(CandyGame game){
 		this.game = game;
+		// Crear el menu...
+
+		CandyLevel(new Level1());
+
+		// Dentro el menu llama a el nivel.
+	}
+
+	public void CandyLevel(Level level) {
 		getChildren().add(new AppMenu());
 		images = new ImageManager();
 		boardPanel = new BoardPanel(game.getSize(), game.getSize(), CELL_SIZE);
 		getChildren().add(boardPanel);
 		scorePanel = new ScorePanel();
 		getChildren().add(scorePanel);
-		game.initGame();
+		game.initGame(level);
 		GameListener listener;
 		game.addGameListener(listener = new GameListener() {
 			@Override
@@ -53,10 +63,6 @@ public class CandyFrame extends VBox {
 				}
 				timeLine.play();
 			}
-			@Override
-			public void cellExplosion(Element e) {
-				//
-			}
 		});
 
 		listener.gridUpdated();
@@ -69,7 +75,7 @@ public class CandyFrame extends VBox {
 				Point2D newPoint = translateCoords(event.getX(), event.getY());
 				if (newPoint != null) {
 					System.out.println("Get second = " +  newPoint);
-					game().tryMove((int)lastPoint.getX(), (int)lastPoint.getY(), (int)newPoint.getX(), (int)newPoint.getY());
+					boolean couldMove = game().tryMove((int)lastPoint.getX(), (int)lastPoint.getY(), (int)newPoint.getX(), (int)newPoint.getY());
 					String message = ((Long)game().getScore()).toString();
 					if (game().isFinished()) {
 						if (game().playerWon()) {

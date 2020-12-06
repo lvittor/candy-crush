@@ -14,7 +14,10 @@ public class GameApp extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		CandyGame game = new CandyGame(Level1.class);
+		CandyGame game = new CandyGame();
+
+		// Implementar el menu que lo crea el CandyFrame y el Scene...
+
 		CandyFrame frame = new CandyFrame(game);
 		Scene scene = new Scene(frame);
 		primaryStage.setResizable(false);

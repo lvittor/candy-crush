@@ -4,8 +4,13 @@ import game.backend.element.Element;
 
 public interface GameListener {
 	
-	void gridUpdated();
+	default void gridUpdated(){
+		//
+	}
 	
-	void cellExplosion(Element e);
-	
+	default void cellExplosion(Element e){
+		//
+	}
+
+
 }
