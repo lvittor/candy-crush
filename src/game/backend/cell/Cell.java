@@ -15,7 +15,8 @@ public class Cell {
 		this.grid = grid;
 		this.content = new Nothing();
 	}
-	
+
+
 	public void setAround(Cell up, Cell down, Cell left, Cell right) {
 		this.around[Direction.UP.ordinal()] = up;
 		this.around[Direction.DOWN.ordinal()] = down;
@@ -40,7 +41,7 @@ public class Cell {
 	}
 	
 	public void clearContent() {
-		if (content.isMovable()) {
+		if (content.canBeCleared()) {
 			Direction[] explosionCascade = content.explode();
 			grid.cellExplosion(content);
 			this.content = new Nothing();
