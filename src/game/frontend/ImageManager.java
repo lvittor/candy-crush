@@ -43,7 +43,7 @@ public class ImageManager {
 
 		for (FruitType ft : FruitType.values()) {
 			fruit.setType(ft);
-			images.put(fruit.getFullKey(), new Image(IMAGE_PATH + fruit.getFullKey() + ".png"));
+			images.put(fruit.getFullKey(), new Image(IMAGE_PATH + fruit.getFullKey().toLowerCase() + ".png"));
 		}
 
 	}

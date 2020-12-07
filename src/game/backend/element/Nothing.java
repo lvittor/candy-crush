@@ -11,7 +11,12 @@ public class Nothing extends Element {
 	public boolean isSolid() {
 		return false;
 	}
-	
+
+	@Override
+	public boolean canBeCleared() {
+		return true;
+	}
+
 	@Override
 	public String getKey() {
 		return "NOTHING";

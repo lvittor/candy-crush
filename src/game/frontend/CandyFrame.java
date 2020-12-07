@@ -7,6 +7,7 @@ import game.backend.element.Element;
 
 import game.backend.level.Level;
 import game.backend.level.Level1;
+import game.backend.level.Level5;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Point2D;
@@ -29,7 +30,7 @@ public class CandyFrame extends VBox {
 		this.game = game;
 		// Crear el menu...
 
-		CandyLevel(new Level1());
+		CandyLevel(new Level5());
 
 		// Dentro el menu llama a el nivel.
 	}

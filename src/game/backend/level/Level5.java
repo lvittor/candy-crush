@@ -10,11 +10,16 @@ import game.backend.element.Nothing;
 public class Level5 extends Level{
 
     private static final int FRUITS = 5;
-    private int fruitsFound;
+    private int fruitsFound = 0;
+    private GameState state;
 
     @Override
     protected GameState newState() {
-        return new Level5State(MAX_MOVES, FRUITS);
+        return state = new Level5State(MAX_MOVES, FRUITS);
+    }
+
+    public GameState getState(){
+        return state;
     }
 
     private class Level5State extends GameState {
@@ -32,6 +37,7 @@ public class Level5 extends Level{
         }
 
         public boolean playerWon() {
+            System.out.println(getFruitsFound());
             return getFruitsFound() == fruits;
         }
 
@@ -46,24 +52,28 @@ public class Level5 extends Level{
         boolean ret;
         if(ret = super.tryMove(i1,j1,i2,j2)){
             state().addMove();
-            clearFruitLine();
+            clearFruitLine(g()[Grid.SIZE - 1], 0);
         }
         return ret;
     }
 
-    public void clearFruitLine(){
-        for(Cell c : g()[Grid.SIZE - 1]){
-            if( ! c.getContent().canBeCleared() ){
-                c.setContent(new Nothing());
-                fallElements();
-                fruitsFound++;
-            }
+
+    public void clearFruitLine(Cell[] line, int j){
+        if (j==Grid.SIZE)
+            return;
+        if ( ! line[j].getContent().canBeCleared() ) {
+            line[j].setContent(new Nothing());
+            fruitsFound++;
+            super.fallElements();
+            clearFruitLine(line, 0);
         }
+        clearFruitLine(line, j+1);
     }
 
     @Override
     public Cell getGeneratorCellType(){
-        return new FruitGeneratorCell(this);
+        return new FruitGeneratorCell(this, FRUITS);
     }
+
 
 }

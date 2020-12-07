@@ -6,7 +6,12 @@ public class Wall extends Element {
 	public boolean isMovable() {
 		return false;
 	}
-	
+
+	@Override
+	public boolean canBeCleared() {
+		return false;
+	}
+
 	@Override
 	public String getKey() {
 		return "WALL";

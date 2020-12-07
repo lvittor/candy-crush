@@ -31,7 +31,7 @@ public abstract class Grid {
 		return g;
 	}
 	
-	protected GameState state(){
+	public GameState state(){
 		return state;
 	}
 	
