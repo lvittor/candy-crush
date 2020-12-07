@@ -1,14 +1,6 @@
 package game.frontend;
 
-import game.backend.element.Bomb;
-import game.backend.element.Candy;
-import game.backend.element.CandyColor;
-import game.backend.element.Element;
-import game.backend.element.HorizontalStripedCandy;
-import game.backend.element.Nothing;
-import game.backend.element.VerticalStripedCandy;
-import game.backend.element.Wall;
-import game.backend.element.WrappedCandy;
+import game.backend.element.*;
 import javafx.scene.image.Image;
 
 import java.util.HashMap;
@@ -23,6 +15,7 @@ public class ImageManager {
 		WrappedCandy wc = new WrappedCandy();
 		VerticalStripedCandy vc = new VerticalStripedCandy();
 		HorizontalStripedCandy hc = new HorizontalStripedCandy();
+		Fruit fruit = new Fruit();
 		images = new HashMap<>();
 		images.put(new Nothing().getKey(), new Image(IMAGE_PATH + "nothing.png"));
 		images.put(new Bomb().getKey(),  new Image(IMAGE_PATH + "bomb.png"));
@@ -46,6 +39,11 @@ public class ImageManager {
 			// Agregamos los HorizontalStripedCandy con sus imagenes
 			hc.setColor(cc);
 			images.put(hc.getFullKey(),  new Image(IMAGE_PATH + cc.toString().toLowerCase() + "HStripped.png"));
+		}
+
+		for (FruitType ft : FruitType.values()) {
+			fruit.setType(ft);
+			images.put(fruit.getFullKey(), new Image(IMAGE_PATH + fruit.getFullKey() + ".png"));
 		}
 
 	}

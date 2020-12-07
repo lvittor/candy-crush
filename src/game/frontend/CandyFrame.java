@@ -88,15 +88,6 @@ public class CandyFrame extends VBox {
 				if (newPoint != null) {
 					System.out.println("Get second = " +  newPoint);
 					boolean valid = game().tryMove((int)lastPoint.getX(), (int)lastPoint.getY(), (int)newPoint.getX(), (int)newPoint.getY());
-
-					if (valid){
-						if( (int)lastPoint.getX() == (int)newPoint.getX() ){
-
-						} else {
-
-						}
-					}
-
 					String message = ((Long)game().getScore()).toString();
 					if (game().isFinished()) {
 						if (game().playerWon()) {

@@ -5,6 +5,10 @@ import game.backend.move.Direction;
 public abstract class Element {
 	
 	public abstract boolean isMovable();
+
+	public boolean canBeCleared(){
+		return isMovable();
+	}
 	
 	public abstract String getKey();
 	
