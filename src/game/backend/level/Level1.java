@@ -33,4 +33,9 @@ public class Level1 extends Level {
 		}
 	}
 
+	@Override
+	public Cell getGeneratorCellType(){
+		return new CandyGeneratorCell(this);
+	}
+
 }

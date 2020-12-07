@@ -3,12 +3,13 @@ package game.backend.level;
 import game.backend.Grid;
 import game.backend.cell.CandyGeneratorCell;
 import game.backend.cell.Cell;
+import game.backend.cell.GeneratorCell;
 import game.backend.element.Wall;
 
 public abstract class Level extends Grid {
 
     private Cell wallCell;
-    private Cell candyGenCell;
+    private Cell GenCell;
     protected static final int MAX_MOVES = 20;
 
     @Override
@@ -16,17 +17,17 @@ public abstract class Level extends Grid {
 
         wallCell = new Cell(this);
         wallCell.setContent(new Wall());
-        candyGenCell = new CandyGeneratorCell(this);
+        GenCell = getGeneratorCellType(); //new CandyGeneratorCell(this);
 
         //corners
-        g()[0][0].setAround(candyGenCell, g()[1][0], wallCell, g()[0][1]);
-        g()[0][SIZE-1].setAround(candyGenCell, g()[1][SIZE-1], g()[0][SIZE-2], wallCell);
+        g()[0][0].setAround(GenCell, g()[1][0], wallCell, g()[0][1]);
+        g()[0][SIZE-1].setAround(GenCell, g()[1][SIZE-1], g()[0][SIZE-2], wallCell);
         g()[SIZE-1][0].setAround(g()[SIZE-2][0], wallCell, wallCell, g()[SIZE-1][1]);
         g()[SIZE-1][SIZE-1].setAround(g()[SIZE-2][SIZE-1], wallCell, g()[SIZE-1][SIZE-2], wallCell);
 
         //upper line cells
         for (int j = 1; j < SIZE-1; j++) {
-            g()[0][j].setAround(candyGenCell,g()[1][j],g()[0][j-1],g()[0][j+1]);
+            g()[0][j].setAround(GenCell,g()[1][j],g()[0][j-1],g()[0][j+1]);
         }
         //bottom line cells
         for (int j = 1; j < SIZE-1; j++) {
@@ -56,5 +57,7 @@ public abstract class Level extends Grid {
         }
         return ret;
     }
+
+    public abstract Cell getGeneratorCellType();
 
 }

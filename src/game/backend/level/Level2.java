@@ -2,6 +2,9 @@ package game.backend.level;
 
 import game.backend.GameState;
 import game.backend.Grid;
+import game.backend.cell.CandyGeneratorCell;
+import game.backend.cell.Cell;
+import game.backend.element.Candy;
 
 public class Level2 extends Level{
 
@@ -36,6 +39,11 @@ public class Level2 extends Level{
             return getGoldenCells() == Grid.SIZE * Grid.SIZE;
         }
 
+    }
+
+    @Override
+    public Cell getGeneratorCellType(){
+        return new CandyGeneratorCell(this);
     }
 
 }
