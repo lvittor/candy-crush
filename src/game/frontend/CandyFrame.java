@@ -7,14 +7,30 @@ import game.backend.element.Element;
 
 import game.backend.level.Level;
 import game.backend.level.Level1;
+import game.backend.level.Level2;
 import game.backend.level.Level5;
+import game.frontend.*;
 import javafx.animation.KeyFrame;
+import javafx.animation.ScaleTransition;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import javafx.util.Pair;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class CandyFrame extends VBox {
 
@@ -26,11 +42,101 @@ public class CandyFrame extends VBox {
 	private Point2D lastPoint;
 	private CandyGame game;
 
+
+	// Codigo menu
+
+	private static final int WIDTH = 585;
+	private static final int HEIGHT = 645;
+
+	private final List<Pair<String, Runnable>> menuData = Arrays.asList(
+			new Pair<String, Runnable>(
+					"Level 1", () -> {setLevel(new Level1());
+				Platform.exit();
+			}),
+			new Pair<String, Runnable>(
+					"Level 2", () -> setLevel(new Level2())
+			),
+			new Pair<String, Runnable>(
+					"Level 5", () -> setLevel(new Level5())
+			)
+	);
+
+	private Level level;
+	private final VBox menuBox = new VBox(-5);
+
+	public void addTitle() {
+		GameApp.Title title = new GameApp.Title("Candy Crush");
+		title.setTranslateX((WIDTH - title.getTitleWidth()) / 2.5);
+		title.setTranslateY(HEIGHT / 3.0);
+		getChildren().add(title);
+	}
+
+	public void addBackground() {
+		ImageView imageView = new ImageView(generateImage(1, 198.0 / 255, 250.0 / 255, 1));
+		imageView.setFitWidth(WIDTH);
+		imageView.setFitHeight(HEIGHT);
+		getChildren().add(imageView);
+	}
+
+	private Image generateImage(double red, double green, double blue, double opacity) {
+		WritableImage img = new WritableImage(1, 1);
+		PixelWriter pw = img.getPixelWriter();
+		Color color = Color.color(red, green, blue, opacity);
+		pw.setColor(0, 0, color);
+		return img;
+	}
+
+	public void startAnimation() {
+		ScaleTransition st = new ScaleTransition(Duration.seconds(1), null);
+		st.setToY(1);
+		st.setOnFinished(e -> {
+			for (int i = 0; i < menuBox.getChildren().size(); i++) {
+				Node n = menuBox.getChildren().get(i);
+
+				TranslateTransition tt = new TranslateTransition(Duration.seconds(1 + i * 0.15), n);
+				tt.setToX(0);
+				tt.setOnFinished(e2 -> n.setClip(null));
+				tt.play();
+			}
+		});
+		st.play();
+	}
+
+	private void addMenu(double x, double y) {
+		menuBox.setTranslateX(x);
+		menuBox.setTranslateY(y);
+		menuData.forEach(data -> {
+			MenuItemm item = new MenuItemm(data.getKey());
+			item.setOnAction(data.getValue());
+			item.setTranslateX(-300);
+
+			Rectangle clip = new Rectangle(300, 30);
+			clip.translateXProperty().bind(item.translateXProperty().negate());
+
+			item.setClip(clip);
+
+			menuBox.getChildren().addAll(item);
+		});
+
+		getChildren().add(menuBox);
+	}
+
+	private void setLevel(Level level){
+		this.level = level;
+	}
+
 	public CandyFrame(CandyGame game){
 		this.game = game;
+
+		addBackground();
+		addTitle();
+		addMenu(WIDTH / 3.0, HEIGHT / 2.0);
+		startAnimation();
+
+
 		// Crear el menu...
 
-		CandyLevel(new Level5());
+//		CandyLevel(level);
 
 		// Dentro el menu llama a el nivel.
 	}
@@ -45,7 +151,7 @@ public class CandyFrame extends VBox {
 		getChildren().add(boardPanel);
 
 		// diff
-
+		//createScorePanel(level);
 		scorePanel = new ScorePanel();
 		getChildren().add(scorePanel);
 

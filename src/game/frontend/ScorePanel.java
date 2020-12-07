@@ -20,4 +20,13 @@ public class ScorePanel extends BorderPane {
 		scoreLabel.setText(text);
 	}
 
+	/*
+	public ScorePanel(){
+		setStyle("-fx-background-color: #5490ff");
+		scoreLabel = new Label("5");
+		scoreLabel.setAlignment(Pos.center)
+	}
+	*/
+
+
 }
