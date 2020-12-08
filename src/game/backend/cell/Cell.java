@@ -7,8 +7,8 @@ import game.backend.move.Direction;
 
 public class Cell {
 	
-	private Grid grid;
-	private Cell[] around = new Cell[Direction.values().length];
+	private final Grid grid;
+	private final Cell[] around = new Cell[Direction.values().length];
 	private Element content;
 	
 	public Cell(Grid grid) {

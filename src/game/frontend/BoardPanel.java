@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 
 public class BoardPanel extends TilePane {
 
-	private ImageView[][] cells;
+	private final ImageView[][] cells;
 
 	public BoardPanel(final int rows, final int columns, final int cellSize) {
 		setPrefRows(rows);
@@ -29,7 +29,7 @@ public class BoardPanel extends TilePane {
 		cells[row][column].setImage(image);
 	}
 
-	public void setGoldCell(int row, int column) {
+	private void setGoldCell(int row, int column) {
 
 		Light.Distant spotLight = new Light.Distant();
 		spotLight.setColor(Color.YELLOW);
@@ -40,5 +40,16 @@ public class BoardPanel extends TilePane {
 
 	}
 
+	public void setGoldColumn(int column){
+		for (int i = 0 ; i < cells.length ; i++){
+			setGoldCell(i, column);
+		}
+	}
+
+	public void setGoldRow(int row){
+		for(int i = 0; i < cells[row].length; i++){
+			setGoldCell(row, i);
+		}
+	}
 
 }

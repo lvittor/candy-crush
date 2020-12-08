@@ -7,9 +7,10 @@ import java.util.Optional;
 
 public class AppMenu extends MenuBar {
 
-    public AppMenu() {
+    public AppMenu(GameApp app) {
         Menu file = new Menu("Archivo");
         MenuItem exitMenuItem = new MenuItem("Salir");
+        MenuItem backMenuItem = new MenuItem("Menu");
         exitMenuItem.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Salir");
@@ -22,7 +23,21 @@ public class AppMenu extends MenuBar {
                 }
             }
         });
-        file.getItems().add(exitMenuItem);
+        backMenuItem.setOnAction(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Salir");
+            alert.setHeaderText("Volver al menu");
+            alert.setContentText("¿Está seguro que desea volver al Menu?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.isPresent()) {
+                if (result.get() == ButtonType.OK) {
+                    app.backToMenu();
+                }
+            }
+        });
+
+        file.getItems().addAll( backMenuItem, exitMenuItem);
+
         Menu help = new Menu("Ayuda");
         MenuItem aboutMenuItem = new MenuItem("Acerca De");
         aboutMenuItem.setOnAction(event -> {

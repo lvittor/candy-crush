@@ -3,14 +3,13 @@ package game.backend.cell;
 import game.backend.GameState;
 import game.backend.Grid;
 import game.backend.element.*;
-import game.backend.level.Level5;
 
 public class FruitGeneratorCell extends GeneratorCell{
 
     private int fruits;
     private int moves = 0;
-    private GameState state;
-    private static final int DIFFICULTY = 4;
+    private final GameState state;
+    private static final int DIFFICULTY = 1;
 
     public FruitGeneratorCell(Grid grid, int fruits) {
         super(grid);
@@ -24,7 +23,7 @@ public class FruitGeneratorCell extends GeneratorCell{
 
         if (  state.getMoves() != moves  && fruits > 0 ) {
             moves++;
-            if ( ((int)(Math.random() * DIFFICULTY)) == 1) {
+            if ( ((int)(Math.random() * DIFFICULTY)) == 0) {
                 fruits--;
                 return new Fruit(FruitType.values()[(int) (Math.random() * FruitType.values().length)]);
             }

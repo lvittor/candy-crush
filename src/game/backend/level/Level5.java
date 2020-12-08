@@ -4,12 +4,11 @@ import game.backend.GameState;
 import game.backend.Grid;
 import game.backend.cell.Cell;
 import game.backend.cell.FruitGeneratorCell;
-import game.backend.element.Fruit;
 import game.backend.element.Nothing;
 
 public class Level5 extends Level{
 
-    private static final int FRUITS = 5;
+    private static final int FRUITS = 3;
     private int fruitsFound = 0;
     private GameState state;
 
@@ -24,8 +23,8 @@ public class Level5 extends Level{
 
     private class Level5State extends GameState {
 
-        private long fruits;
-        private long maxMoves;
+        private final long fruits;
+        private final long maxMoves;
 
         public Level5State(int maxMoves, int fruits) {
             this.maxMoves = maxMoves;
@@ -37,10 +36,13 @@ public class Level5 extends Level{
         }
 
         public boolean playerWon() {
-            System.out.println(getFruitsFound());
             return getFruitsFound() == fruits;
         }
 
+        @Override
+        public String getDescription() {
+            return super.getDescription() + " |" + " Moves left: " + (maxMoves - getMoves()) + " |" + " Fruits left: " + (fruits - getFruitsFound());
+        }
     }
 
     private int getFruitsFound() {
@@ -51,7 +53,6 @@ public class Level5 extends Level{
     public boolean tryMove(int i1, int j1, int i2, int j2){
         boolean ret;
         if(ret = super.tryMove(i1,j1,i2,j2)){
-            state().addMove();
             clearFruitLine(g()[Grid.SIZE - 1], 0);
         }
         return ret;

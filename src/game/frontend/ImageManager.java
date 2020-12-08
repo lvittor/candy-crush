@@ -9,7 +9,7 @@ import java.util.Map;
 public class ImageManager {
 
 	private static final String IMAGE_PATH = "images/";
-	private Map<String, Image> images;
+	private final Map<String, Image> images;
 
 	public ImageManager() {
 		WrappedCandy wc = new WrappedCandy();

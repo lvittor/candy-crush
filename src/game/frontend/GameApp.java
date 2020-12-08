@@ -1,13 +1,13 @@
 package game.frontend;
 
 import game.backend.CandyGame;
+import game.backend.Grid;
 import game.backend.level.Level;
 import game.backend.level.Level1;
 import game.backend.level.Level2;
 import game.backend.level.Level5;
 import javafx.animation.*;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,27 +28,42 @@ import javafx.util.Pair;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class GameApp extends Application {
 
-	private static final int WIDTH = 585;
-	private static final int HEIGHT = 645;
+    private static final int WIDTH = Grid.SIZE * CandyFrame.CELL_SIZE;
+	private static final int HEIGHT = WIDTH + 60;   // 60 es el alto del ScorePanel mas el alto del MenuBar.
+	private static Stage stage;
+	private final Pane root = new Pane();
+	private final VBox menuBox = new VBox(-5);
+	private Scene menu;
 
 	private final List<Pair<String, Runnable>> menuData = Arrays.asList(
 			new Pair<String, Runnable>(
-					"Level 1", () -> {setLevel(new Level1());
-						 				 		Platform.exit();
-			}),
-			new Pair<String, Runnable>(
-					"Level 2", () -> setLevel(new Level2())
+					"Level 1", () -> playLevel(new Level1())
 			),
 			new Pair<String, Runnable>(
-					"Level 5", () -> setLevel(new Level5())
+					"Level 2", () -> playLevel(new Level2(), (board, lastPoint, newPoint) -> {
+						if ( (int)lastPoint.getX() == (int)newPoint.getX() ){
+							board.setGoldRow((int)lastPoint.getX());
+						} else {
+							board.setGoldColumn((int)lastPoint.getY());
+						}
+			})
+			),
+			new Pair<String, Runnable>(
+					"Level 5", () -> playLevel(new Level5())
 			)
 	);
 
-	private Level level;
-	private final Pane root = new Pane();
-	private final VBox menuBox = new VBox(-5);
+	private void playLevel(Level level, LevelBehaviour behaviour){
+		Scene scene = new Scene(new CandyFrame(new CandyGame(), level, this, behaviour));
+		replaceScene(scene);
+	}
+	private void playLevel(Level level){
+		Scene scene = new Scene(new CandyFrame(new CandyGame(), level, this));
+		replaceScene(scene);
+	}
 
 	private Parent createContent() {
 		addBackground();
@@ -59,14 +74,14 @@ public class GameApp extends Application {
 		return root;
 	}
 
-	public void addTitle() {
+	private void addTitle() {
 		Title title = new Title("Candy Crush");
 		title.setTranslateX((WIDTH - title.getTitleWidth()) / 2.5);
 		title.setTranslateY(HEIGHT / 3.0);
 		root.getChildren().add(title);
 	}
 
-	public void addBackground() {
+	private void addBackground() {
 		ImageView imageView = new ImageView(generateImage(1, 198.0 / 255, 250.0 / 255, 1));
 		imageView.setFitWidth(WIDTH);
 		imageView.setFitHeight(HEIGHT);
@@ -84,7 +99,7 @@ public class GameApp extends Application {
 		return img;
 	}
 
-	public void startAnimation() {
+	private void startAnimation() {
 		ScaleTransition st = new ScaleTransition(Duration.seconds(1), null);
 		st.setToY(1);
 		st.setOnFinished(e -> {
@@ -119,7 +134,7 @@ public class GameApp extends Application {
 		root.getChildren().add(menuBox);
 	}
 
-	public static class Title extends Pane {
+	private static class Title extends Pane {
 		private final Text text;
 
 		public Title(String name) {
@@ -135,24 +150,28 @@ public class GameApp extends Application {
 		}
 	}
 
+	private static void replaceScene(Scene newScene) {
+		stage.setScene(newScene);
+		stage.sizeToScene();
+	}
 
-	private void setLevel(Level level){
-		this.level = level;
+	private void initMenu() {
+		menu = new Scene(createContent());
+		stage.setResizable(false);
+		replaceScene(menu);
+	}
+
+	public void backToMenu(){
+		replaceScene(menu);
 	}
 
 	@Override
-	public void start(Stage stage) {
-//		Scene scene = new Scene(createContent());
-//		stage.setTitle("Candy Crush");   A ver como poner el titulo desde CandyFrame
-		//stage.setResizable(false);
-//		stage.setScene(scene);
-//		stage.show();
-		CandyGame game = new CandyGame();
-		CandyFrame frame = new CandyFrame(game);
-		Scene scene = new Scene(frame);
-		stage.setScene(scene);
+	public void start(Stage primaryStage) {
+		stage = primaryStage;
+		initMenu();
 		stage.show();
 	}
+
 
 	public static void main(String[] args) {
 		launch(args);

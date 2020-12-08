@@ -12,6 +12,10 @@ public abstract class GameState {
 	public long getScore(){
 		return score;
 	}
+
+	public String getDescription(){
+		return "Score: " + ((Long) score).toString();
+	}
 	
 	public void addMove() {
 		moves++;

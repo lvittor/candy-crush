@@ -4,7 +4,7 @@ import game.backend.move.Direction;
 
 public class HorizontalStripedCandy extends Candy {
 	
-	private Direction[] explosion = new Direction[2];
+	private final Direction[] explosion = new Direction[2];
 	
 	public HorizontalStripedCandy() {
 		explosion[0] = Direction.LEFT;
