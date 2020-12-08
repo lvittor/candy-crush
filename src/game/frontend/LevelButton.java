@@ -10,9 +10,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class MenuItemm extends Pane {
+public class LevelButton extends Pane {
 
-    public MenuItemm(String name) {
+    public LevelButton(String name) {
 
         Rectangle bg = new Rectangle(
                 0, 0,

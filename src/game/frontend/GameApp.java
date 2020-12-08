@@ -119,7 +119,7 @@ public class GameApp extends Application {
 		menuBox.setTranslateX(x);
 		menuBox.setTranslateY(y);
 		menuData.forEach(data -> {
-			MenuItemm item = new MenuItemm(data.getKey());
+			LevelButton item = new LevelButton(data.getKey());
 			item.setOnAction(data.getValue());
 			item.setTranslateX(-300);
 
