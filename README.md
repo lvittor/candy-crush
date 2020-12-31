@@ -14,7 +14,7 @@ When certain figures explode they leave special candies in their place, which wh
 
 ## Levels
 
-### Level 1:   
+### Level 1: Classic   
 The objective of this level is to reach the desired score before a certain number of moves.
 
 ![Level1](https://media.giphy.com/media/UohbAYIuTuiztcbKpK/giphy.gif)
