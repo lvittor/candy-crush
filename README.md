@@ -1,4 +1,4 @@
-# Objective
+# Candy Crush
 
 The aim of this work is to implement new functionalities in a very reduced version of the game **_Candy Crush_** developed in Java.
 
