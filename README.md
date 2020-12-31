@@ -30,7 +30,7 @@ For this it is necessary to make exchanges:
 
 If a row or column is already gold and valid trades are made on it, it does nothing. The number of squares on the board remaining to turn gold is displayed on the bottom panel, along with the score and remaining moves.
 
-### Level 5: 
+### Level 5: Fruit (Cherry & Hazelnut)
 
 The objective of the level is to bring a certain amount of fruit to the last row of the board in less than a certain amount of moves.
 
